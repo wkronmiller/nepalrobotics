@@ -1,23 +1,44 @@
 .links-list {
   list-style: none;
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 0.75rem;
 }
 
 .links-list a {
-  display: block;
-  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.95rem 1.1rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  word-break: break-all;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  height: 100%;
+  text-decoration: none;
 }
 
 .links-list a:hover {
-  border-color: var(--color-primary);
+  border-color: rgba(26, 77, 110, 0.35);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+  color: inherit;
+}
+
+.link-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  word-break: break-word;
+}
+
+.link-url {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.links-list a:hover .link-label {
+  color: var(--color-accent);
 }

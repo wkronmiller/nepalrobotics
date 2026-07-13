@@ -2,21 +2,28 @@ import { Link } from 'react-router-dom'
 import siteData from '../data/site-data.json'
 import ImageGallery from '../components/ImageGallery'
 import BlogCard from '../components/BlogCard'
+import { assetUrl } from '../utils/assets'
 import './Home.css'
+
+// Everest summit photo from the original Squarespace gallery
+const HERO_IMAGE = '/images/gallery/mck_nepal_2017_rev._1_everest_summit_best_DSC_7297.jpg'
 
 export default function Home() {
   const homeBlocks = siteData.pages['/']?.blocks || []
-  const intro = homeBlocks.find((b) => b.type === 'html')
+  // Prefer the long project description over short section labels like "USA Updates"
+  const intro =
+    homeBlocks
+      .filter((b) => b.type === 'html')
+      .sort((a, b) => (b.content?.length || 0) - (a.content?.length || 0))[0] || null
   const galleryImages = homeBlocks.filter((b) => b.type === 'image')
   const usaPosts = siteData.posts?.filter((p) => p.collection === 'usa').slice(0, 3) || []
   const nepalPosts = siteData.posts?.filter((p) => p.collection === 'nepal').slice(0, 3) || []
-  const heroImage = galleryImages[0]?.localSrc || galleryImages[0]?.src
 
   return (
     <div className="home">
       <section
         className="hero"
-        style={heroImage ? { backgroundImage: `url(${heroImage})` } : undefined}
+        style={{ backgroundImage: `url(${assetUrl(HERO_IMAGE)})` }}
       >
         <div className="hero-overlay">
           <div className="container hero-content">
@@ -94,7 +101,11 @@ export default function Home() {
         <section className="gallery-section">
           <div className="container">
             <h2>Project Gallery</h2>
-            <ImageGallery images={galleryImages} />
+            <ImageGallery
+              images={galleryImages.filter(
+                (img) => !/logo|kwf_|kashmir_robotics/i.test(img.localSrc || img.src || '')
+              )}
+            />
           </div>
         </section>
       )}

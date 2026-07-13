@@ -1,3 +1,11 @@
 .static-page {
-  padding: 3rem 1.5rem 4rem;
+  padding-bottom: calc(var(--space-page) + 1rem);
+}
+
+.static-page:not(:has(> .page-title)) {
+  padding-top: 1.75rem;
+}
+
+.static-page .content-blocks {
+  max-width: 100%;
 }
