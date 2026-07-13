@@ -1,0 +1,31 @@
+.page-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+}
+
+.page-header-overlay {
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 51, 71, 0.75),
+    rgba(15, 51, 71, 0.85)
+  );
+  padding: 3.5rem 0;
+}
+
+.page-header h1 {
+  color: white;
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  font-weight: 300;
+}

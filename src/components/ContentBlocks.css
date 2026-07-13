@@ -1,0 +1,26 @@
+.content-blocks {
+  max-width: 800px;
+}
+
+.content-text {
+  margin-bottom: 2rem;
+}
+
+.content-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.content-image {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.content-image img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}

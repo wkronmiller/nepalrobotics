@@ -1,0 +1,106 @@
+.hero {
+  min-height: 70vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.hero-overlay {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 51, 71, 0.88) 0%,
+    rgba(26, 77, 110, 0.75) 50%,
+    rgba(196, 92, 38, 0.4) 100%
+  );
+  padding: 5rem 0;
+}
+
+.hero-content {
+  max-width: 700px;
+}
+
+.hero h1 {
+  color: white;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.hero-tagline {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-btn-outline {
+  color: white !important;
+  border-color: white !important;
+}
+
+.hero-btn-outline:hover {
+  background: white !important;
+  color: var(--color-primary) !important;
+}
+
+.intro-section {
+  padding: 4rem 0;
+  background: var(--color-surface);
+}
+
+.intro-content {
+  max-width: 750px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.updates-section {
+  padding: 4rem 0;
+}
+
+.updates-section.alt {
+  background: var(--color-surface);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  color: var(--color-primary);
+}
+
+.view-all {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.gallery-section {
+  padding: 4rem 0;
+}
+
+.gallery-section h2 {
+  font-size: 1.75rem;
+  color: var(--color-primary);
+  margin-bottom: 2rem;
+  text-align: center;
+}
