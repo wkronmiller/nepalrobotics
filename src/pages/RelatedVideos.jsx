@@ -19,7 +19,7 @@ export default function RelatedVideos() {
                   <div className="video-embed">
                     <iframe
                       src={`https://www.youtube.com/embed/${video.youtubeId}`}
-                      title={video.title}
+                      title={video.title || 'Related video'}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                       loading="lazy"
@@ -27,10 +27,10 @@ export default function RelatedVideos() {
                   </div>
                 ) : video.url ? (
                   <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link">
-                    Watch video
+                    Watch video<span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : null}
-                <h3>{video.title}</h3>
+                <h2>{video.title || 'Related video'}</h2>
                 {video.description && <p>{video.description}</p>}
               </article>
             ))}

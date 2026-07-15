@@ -8,18 +8,18 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-inner">
         <div className="footer-brand">
-          <h3>{meta.title}</h3>
+          <h2>{meta.title}</h2>
           <p>{meta.tagline}</p>
         </div>
 
         <div className="footer-social">
-          <h4>Follow Us</h4>
+          <h2>Follow Us</h2>
           <div className="social-links">
             <a href={`https://twitter.com/${meta.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer">
-              Twitter
+              Twitter<span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a href={meta.youtube} target="_blank" rel="noopener noreferrer">
-              YouTube
+              YouTube<span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
         </div>

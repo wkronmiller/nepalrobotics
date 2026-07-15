@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import siteData from '../data/site-data.json'
 import PageTitle from '../components/PageTitle'
 import CollaboratorNav from '../components/CollaboratorNav'
@@ -106,21 +106,25 @@ function PhotoCarousel({ photos, label = 'Student photos' }) {
     [count]
   )
 
-  useEffect(() => {
-    if (count < 2) return undefined
-
-    const onKey = (event) => {
-      if (event.key === 'ArrowLeft') go(-1)
-      if (event.key === 'ArrowRight') go(1)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [count, go])
-
   if (!count) return null
 
   return (
-    <div className="photo-carousel" role="region" aria-roledescription="carousel" aria-label={label}>
+    <div
+      className="photo-carousel"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={label}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault()
+          go(-1)
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault()
+          go(1)
+        }
+      }}
+    >
       <div className="photo-carousel-stage">
         {count > 1 && (
           <button
@@ -134,7 +138,11 @@ function PhotoCarousel({ photos, label = 'Student photos' }) {
         )}
 
         <figure className="photo-carousel-frame">
-          <img src={assetUrl(photos[index])} alt="" key={photos[index]} />
+          <img
+            src={assetUrl(photos[index])}
+            alt={`STEM Club student photo ${index + 1}`}
+            key={photos[index]}
+          />
         </figure>
 
         {count > 1 && (
@@ -151,21 +159,20 @@ function PhotoCarousel({ photos, label = 'Student photos' }) {
 
       {count > 1 && (
         <>
-          <p className="photo-carousel-status" aria-live="polite">
-            {index + 1} / {count}
+          <p className="photo-carousel-status" role="status" aria-live="polite" aria-atomic="true">
+            Photo {index + 1} of {count}: STEM Club student photo
           </p>
-          <div className="photo-carousel-thumbs" role="tablist" aria-label="Photo thumbnails">
+          <div className="photo-carousel-thumbs" role="group" aria-label="Photo thumbnails">
             {photos.map((src, i) => (
               <button
                 type="button"
                 key={src}
-                role="tab"
-                aria-selected={i === index}
+                aria-pressed={i === index}
                 className={`photo-carousel-thumb ${i === index ? 'active' : ''}`}
                 onClick={() => setIndex(i)}
                 aria-label={`Show photo ${i + 1}`}
               >
-                <img src={assetUrl(src)} alt="" loading="lazy" />
+                <img src={assetUrl(src)} alt={`STEM Club student photo ${i + 1}`} loading="lazy" />
               </button>
             ))}
           </div>
@@ -190,7 +197,7 @@ export default function Students() {
       </div>
       <CollaboratorNav />
       <section className="static-page container students-page">
-        <h3 className="content-heading">USA</h3>
+        <h2 className="content-heading">USA</h2>
         {usaName && <p className="student-lead-name">{usaName}</p>}
         {michaelPhoto && (
           <figure className="student-portrait">
@@ -199,14 +206,14 @@ export default function Students() {
         )}
         {bio && <p className="prose student-bio">{bio}</p>}
 
-        <h3 className="content-heading">Nepal</h3>
+        <h2 className="content-heading">Nepal</h2>
         <h3 className="content-heading">Members of STEM Club</h3>
 
         <PhotoCarousel photos={stemPhotos} label="STEM Club student photos" />
 
         {grades.map((grade) => (
           <div key={grade.title} className="student-grade">
-            <h3 className="content-heading">{grade.title}</h3>
+            <h4 className="content-heading">{grade.title}</h4>
             <ul className="name-grid student-name-list">
               {grade.names.map((name) => (
                 <li key={name} className="person-card">

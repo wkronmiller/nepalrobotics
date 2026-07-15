@@ -16,6 +16,7 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/usa-updates" element={<UsaUpdates />} />
         <Route path="/usa-updates/*" element={<BlogPost collection="usa" />} />
         <Route path="/nepal-updates" element={<NepalUpdates />} />

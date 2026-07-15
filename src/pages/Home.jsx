@@ -51,7 +51,7 @@ export default function Home() {
                     <>
                       {para.split('@nepalrobotics')[0]}
                       <a href="https://twitter.com/nepalrobotics" target="_blank" rel="noopener noreferrer">
-                        @nepalrobotics
+                        @nepalrobotics<span className="sr-only"> (opens in a new tab)</span>
                       </a>
                       {para.split('@nepalrobotics')[1]}
                     </>

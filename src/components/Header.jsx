@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import siteData from '../data/site-data.json'
-import { assetUrl } from '../utils/assets'
 import './Header.css'
 
 const MOBILE_MQ = '(max-width: 1024px)'
@@ -32,6 +31,8 @@ export default function Header() {
   const [openDropdown, setOpenDropdown] = useState(null)
   const location = useLocation()
   const headerRef = useRef(null)
+  const menuButtonRef = useRef(null)
+  const dropdownButtonRefs = useRef({})
 
   useEffect(() => {
     setMenuOpen(false)
@@ -52,22 +53,40 @@ export default function Header() {
 
   useEffect(() => {
     const isMobile = window.matchMedia(MOBILE_MQ).matches
+    const main = document.querySelector('.main-content')
+    const footer = document.querySelector('.footer')
     document.body.style.overflow = menuOpen && isMobile ? 'hidden' : ''
+
+    if (menuOpen && isMobile) {
+      main?.setAttribute('inert', '')
+      footer?.setAttribute('inert', '')
+    }
+
     return () => {
       document.body.style.overflow = ''
+      main?.removeAttribute('inert')
+      footer?.removeAttribute('inert')
     }
   }, [menuOpen])
 
   useEffect(() => {
-    if (!openDropdown) return undefined
+    if (!menuOpen && !openDropdown) return undefined
 
     const onPointerDown = (event) => {
       if (!headerRef.current?.contains(event.target)) {
         setOpenDropdown(null)
+        setMenuOpen(false)
       }
     }
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') setOpenDropdown(null)
+      if (event.key === 'Escape') {
+        const trigger = openDropdown ? dropdownButtonRefs.current[openDropdown] : null
+        setOpenDropdown(null)
+        setMenuOpen(false)
+        const isMobile = window.matchMedia(MOBILE_MQ).matches
+        const focusTarget = isMobile ? menuButtonRef.current : (trigger || menuButtonRef.current)
+        focusTarget?.focus()
+      }
     }
 
     document.addEventListener('pointerdown', onPointerDown)
@@ -76,7 +95,7 @@ export default function Header() {
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [openDropdown])
+  }, [menuOpen, openDropdown])
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/'
@@ -86,17 +105,26 @@ export default function Header() {
   const isGroupActive = (children) =>
     children.some((child) => isActive(child.path))
 
+  const closeNavigation = (desktopTarget, restoreFocus) => {
+    setMenuOpen(false)
+    setOpenDropdown(null)
+    if (!restoreFocus) return
+
+    window.requestAnimationFrame(() => {
+      const isMobile = window.matchMedia(MOBILE_MQ).matches
+      const focusTarget = isMobile ? menuButtonRef.current : desktopTarget
+      focusTarget?.focus()
+    })
+  }
+
   return (
     <header className="header" ref={headerRef}>
       <div className="header-inner container">
-        <Link to="/" className="site-brand" onClick={() => setMenuOpen(false)}>
-          <img
-            src={assetUrl('/images/logos/logo.png')}
-            alt=""
-            className="site-logo"
-            width={48}
-            height={36}
-          />
+        <Link
+          to="/"
+          className="site-brand"
+          onClick={(event) => closeNavigation(event.currentTarget, location.pathname === '/')}
+        >
           <span className="site-brand-text">
             <span className="site-title">{siteData.meta.title}</span>
             <span className="site-tagline">{siteData.meta.tagline}</span>
@@ -105,9 +133,14 @@ export default function Header() {
 
         <button
           type="button"
+          ref={menuButtonRef}
           className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
+          onClick={() => {
+            setMenuOpen((open) => !open)
+            setOpenDropdown(null)
+          }}
+          aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+          aria-controls="site-navigation"
           aria-expanded={menuOpen}
         >
           <span />
@@ -115,7 +148,7 @@ export default function Header() {
           <span />
         </button>
 
-        <nav className={`nav ${menuOpen ? 'open' : ''}`} aria-label="Main">
+        <nav id="site-navigation" className={`nav ${menuOpen ? 'open' : ''}`} aria-label="Main">
           <ul className="nav-list">
             {navItems.map((item) =>
               item.children ? (
@@ -125,25 +158,31 @@ export default function Header() {
                 >
                   <button
                     type="button"
+                    ref={(node) => {
+                      dropdownButtonRefs.current[item.label] = node
+                    }}
                     className={`nav-link dropdown-label ${isGroupActive(item.children) ? 'active' : ''}`}
+                    aria-controls={`dropdown-${item.label.toLowerCase()}`}
                     aria-expanded={openDropdown === item.label}
-                    aria-haspopup="true"
                     onClick={() =>
                       setOpenDropdown((current) => (current === item.label ? null : item.label))
                     }
                   >
                     {item.label}
                   </button>
-                  <ul className="dropdown">
+                  <ul id={`dropdown-${item.label.toLowerCase()}`} className="dropdown">
                     {item.children.map((child) => (
                       <li key={child.path}>
                         <Link
                           to={child.path}
                           className={isActive(child.path) ? 'active' : ''}
-                          onClick={() => {
-                            setMenuOpen(false)
-                            setOpenDropdown(null)
-                          }}
+                          aria-current={isActive(child.path) ? 'page' : undefined}
+                          onClick={() =>
+                            closeNavigation(
+                              dropdownButtonRefs.current[item.label],
+                              location.pathname === child.path,
+                            )
+                          }
                         >
                           {child.label}
                         </Link>
@@ -156,7 +195,10 @@ export default function Header() {
                   <Link
                     to={item.path}
                     className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
-                    onClick={() => setMenuOpen(false)}
+                    aria-current={isActive(item.path) ? 'page' : undefined}
+                    onClick={(event) =>
+                      closeNavigation(event.currentTarget, location.pathname === item.path)
+                    }
                   >
                     {item.label}
                   </Link>

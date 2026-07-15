@@ -9,7 +9,7 @@
 :root {
   --color-primary: #1a4d6e;
   --color-primary-dark: #0f3347;
-  --color-accent: #c45c26;
+  --color-accent: #a7471f;
   --color-accent-light: #e8844a;
   --color-bg: #f7f5f2;
   --color-surface: #ffffff;
@@ -30,6 +30,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
 }
 
 body {
@@ -51,6 +52,47 @@ a {
   color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2000;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-dark);
+  color: white;
+  font-weight: 600;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: white;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 a:hover {
@@ -83,6 +125,7 @@ h1, h2, h3, h4 {
   font-size: 1.05rem;
   line-height: 1.8;
   color: var(--color-text);
+  overflow-wrap: break-word;
 }
 
 .prose p {
@@ -106,6 +149,7 @@ h1, h2, h3, h4 {
 .prose a {
   text-decoration: underline;
   text-underline-offset: 2px;
+  overflow-wrap: anywhere;
 }
 
 .btn {
@@ -178,4 +222,19 @@ h1, h2, h3, h4 {
 .page-section {
   padding-top: var(--space-page);
   padding-bottom: calc(var(--space-page) + 0.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

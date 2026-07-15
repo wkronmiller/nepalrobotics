@@ -22,8 +22,8 @@
 }
 
 .gallery-item:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 .gallery-item img {
@@ -46,6 +46,7 @@
 .lightbox img {
   max-width: min(92vw, 1200px);
   max-height: 85vh;
+  max-height: min(85vh, calc(100dvh - 4rem));
   object-fit: contain;
   border-radius: 4px;
 }
@@ -83,6 +84,8 @@
   color: white;
   font-size: 2rem;
   cursor: pointer;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius);
   line-height: 1;
@@ -105,6 +108,11 @@
     padding: 1rem;
   }
 
+  .lightbox img {
+    max-height: 85vh;
+    max-height: calc(100dvh - 2rem);
+  }
+
   .lightbox-nav.prev {
     left: 0.5rem;
   }
@@ -112,4 +120,8 @@
   .lightbox-nav.next {
     right: 0.5rem;
   }
+}
+
+.lightbox :focus-visible {
+  outline-color: white;
 }

@@ -14,7 +14,7 @@
   flex-direction: column;
 }
 
-.video-card h3 {
+.video-card h2 {
   font-size: 1rem;
   margin: 1rem 1.15rem 0.35rem;
   color: var(--color-primary-dark);

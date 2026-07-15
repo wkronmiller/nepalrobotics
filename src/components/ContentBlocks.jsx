@@ -1,4 +1,4 @@
-import { assetUrl } from '../utils/assets'
+import { assetUrl, imageAlt } from '../utils/assets'
 import './ContentBlocks.css'
 
 const LOGO_PATTERN = /logo|kwf_|kashmir_robotics/i
@@ -9,6 +9,11 @@ const SECTION_HEADING =
 
 function getImageSrc(block) {
   return assetUrl(block.localSrc || block.src)
+}
+
+function getImageAlt(block) {
+  const alt = typeof block.alt === 'string' ? block.alt.trim() : ''
+  return alt || imageAlt(block.localSrc || block.src)
 }
 
 function isLogoImage(block) {
@@ -53,6 +58,7 @@ function linkifyText(text) {
     parts.push(
       <a key={`${match.index}-${raw}`} href={href} target="_blank" rel="noopener noreferrer">
         {raw.replace(/^https?:\/\//i, '').replace(/^www\./i, '')}
+        <span className="sr-only"> (opens in a new tab)</span>
       </a>
     )
     lastIndex = match.index + raw.length
@@ -214,10 +220,11 @@ function renderClassified(classified, keyPrefix) {
     flushNames()
 
     if (item.type === 'heading') {
+      const Heading = GRADE_HEADING.test(item.text) ? 'h3' : 'h2'
       elements.push(
-        <h3 key={`${keyPrefix}-h-${i}`} className="content-heading">
+        <Heading key={`${keyPrefix}-h-${i}`} className="content-heading">
           {item.text}
-        </h3>
+        </Heading>
       )
     } else {
       elements.push(
@@ -271,7 +278,11 @@ export default function ContentBlocks({ blocks, hideLogos = true, portraitImages
         <div className={`content-images ${portraitImages ? 'portraits' : ''}`}>
           {imageBlocks.map((block, i) => (
             <figure key={i} className="content-image">
-              <img src={getImageSrc(block)} alt={block.alt || ''} loading="lazy" />
+              <img
+                src={getImageSrc(block)}
+                alt={getImageAlt(block)}
+                loading="lazy"
+              />
             </figure>
           ))}
         </div>

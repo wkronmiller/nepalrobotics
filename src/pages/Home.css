@@ -57,6 +57,10 @@
   border-color: white !important;
 }
 
+.hero :focus-visible {
+  outline-color: white;
+}
+
 .intro-section {
   padding: var(--space-section) 0;
   background: var(--color-surface);

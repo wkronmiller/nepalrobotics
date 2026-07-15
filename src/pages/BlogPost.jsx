@@ -1,16 +1,23 @@
 import { useLocation, Link } from 'react-router-dom'
 import siteData from '../data/site-data.json'
 import { assetUrl } from '../utils/assets'
+import { getPostDate, normalizePath } from '../utils/seo'
 import './BlogPost.css'
 
 function getImageSrc(block) {
   return assetUrl(block.localSrc || block.src)
 }
 
+function getImageAlt(block, fallback) {
+  const alt = typeof block.alt === 'string' ? block.alt.trim() : ''
+  return alt || fallback
+}
+
 export default function BlogPost({ collection }) {
   const location = useLocation()
+  const pathname = normalizePath(location.pathname, import.meta.env.BASE_URL)
   const post = siteData.posts?.find(
-    (candidate) => candidate.slug === location.pathname && candidate.collection === collection,
+    (candidate) => candidate.slug === pathname && candidate.collection === collection,
   )
 
   if (!post) {
@@ -34,7 +41,11 @@ export default function BlogPost({ collection }) {
         <div className="container">
           <Link to={backPath} className="back-link">← {backLabel}</Link>
           <h1>{title}</h1>
-          {post.date && <time className="blog-post-date">{post.date}</time>}
+          {post.date && (
+            <time className="blog-post-date" dateTime={getPostDate(post)}>
+              {post.date}
+            </time>
+          )}
         </div>
       </header>
 
@@ -53,7 +64,7 @@ export default function BlogPost({ collection }) {
             if (block.type === 'image') {
               return (
                 <figure key={i} className="blog-image">
-                  <img src={getImageSrc(block)} alt={block.alt || ''} loading="lazy" />
+                  <img src={getImageSrc(block)} alt={getImageAlt(block, `${title} image`)} loading="lazy" />
                 </figure>
               )
             }
@@ -65,6 +76,7 @@ export default function BlogPost({ collection }) {
                     title={`${title} video`}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    loading="lazy"
                   />
                 </div>
               )

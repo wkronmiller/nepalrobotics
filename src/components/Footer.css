@@ -13,8 +13,7 @@
   align-items: start;
 }
 
-.footer h3,
-.footer h4 {
+.footer h2 {
   color: white;
   font-size: 0.9rem;
   font-weight: 600;
@@ -23,7 +22,7 @@
   text-transform: uppercase;
 }
 
-.footer-brand h3 {
+.footer-brand h2 {
   font-size: 1.05rem;
   text-transform: none;
   letter-spacing: 0;
@@ -52,6 +51,10 @@
 
 .footer a:hover {
   color: white;
+}
+
+.footer :focus-visible {
+  outline-color: white;
 }
 
 .social-links {

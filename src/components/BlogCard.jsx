@@ -1,25 +1,67 @@
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../utils/assets'
+import { getPostDate } from '../utils/seo'
 import './BlogCard.css'
+
+function getThumbnail(post) {
+  if (post.thumbnailLocal || post.thumbnail) {
+    return post.thumbnailLocal || post.thumbnail
+  }
+
+  const imageBlock = post.blocks?.find((block) => block.type === 'image')
+  if (imageBlock?.localSrc || imageBlock?.src) {
+    return imageBlock.localSrc || imageBlock.src
+  }
+
+  const videoBlock = post.blocks?.find((block) => block.type === 'video' && block.youtubeId)
+  if (videoBlock) {
+    return `https://img.youtube.com/vi/${videoBlock.youtubeId}/hqdefault.jpg`
+  }
+
+  return null
+}
+
+function getExcerpt(post) {
+  const sourceText =
+    post.blocks?.find((block) => block.type === 'text')?.content || post.excerpt || ''
+  const normalizedText = sourceText.replace(/\s+/g, ' ').trim()
+
+  if (normalizedText) {
+    return normalizedText.length > 200
+      ? `${normalizedText.slice(0, 200).trimEnd()}…`
+      : normalizedText
+  }
+
+  if (post.blocks?.some((block) => block.type === 'video')) {
+    return 'Video update — watch the full recording.'
+  }
+
+  return ''
+}
 
 export default function BlogCard({ post }) {
   const title = post.title?.trim() || 'Project update'
-  const thumb = assetUrl(post.thumbnailLocal || post.thumbnail)
-  const sourceText = post.blocks?.find((block) => block.type === 'text')?.content || post.excerpt || ''
-  const normalizedText = sourceText.replace(/\s+/g, ' ').trim()
-  const excerpt = normalizedText.length > 200
-    ? `${normalizedText.slice(0, 200).trimEnd()}…`
-    : normalizedText
+  const thumb = assetUrl(getThumbnail(post))
+  const excerpt = getExcerpt(post)
 
   return (
     <article className="blog-card">
       {thumb && (
-        <Link to={post.slug} className="blog-card-image">
-          <img src={thumb} alt={title} loading="lazy" />
+        <Link
+          to={post.slug}
+          className="blog-card-image"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <img src={thumb} alt="" loading="lazy" />
         </Link>
       )}
       <div className="blog-card-body">
-        {post.date && <time className="blog-card-date">{post.date}</time>}
+        {post.date && (
+          <time className="blog-card-date" dateTime={getPostDate(post)}>
+            {post.date}
+          </time>
+        )}
         <h2>
           <Link to={post.slug}>{title}</Link>
         </h2>
