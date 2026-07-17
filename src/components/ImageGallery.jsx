@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { assetUrl, imageAlt } from '../utils/assets'
+import ResponsiveImage from './ResponsiveImage'
 import './ImageGallery.css'
 
+function getImageSource(block) {
+  return block.localSrc || block.src
+}
+
 function getImageSrc(block) {
-  return assetUrl(block.localSrc || block.src)
+  return assetUrl(getImageSource(block))
 }
 
 function getImageAlt(image) {
   const alt = typeof image.alt === 'string' ? image.alt.trim() : ''
-  return alt || imageAlt(image.localSrc || image.src)
+  return alt || imageAlt(getImageSource(image))
 }
 
 const FOCUSABLE_SELECTOR =
@@ -126,10 +131,11 @@ export default function ImageGallery({ images }) {
                 : `Open project image ${i + 1} of ${images.length}`
             }
           >
-            <img
-              src={getImageSrc(img)}
+            <ResponsiveImage
+              src={getImageSource(img)}
               alt={getImageAlt(img)}
               loading="lazy"
+              sizes="(max-width: 493px) calc(100vw - 2.5rem), (max-width: 727px) calc((100vw - 3.35rem) / 2), (max-width: 767px) calc((100vw - 4.2rem) / 3), (max-width: 976px) calc((100vw - 5.2rem) / 3), (max-width: 1119px) calc((100vw - 6.05rem) / 4), 256px"
             />
           </button>
         ))}

@@ -35,10 +35,13 @@ const staticRoutes = [
   ...(data.posts || []).map((post) => post.slug),
 ]
 
+const heroPreloadPattern = /\n    <!-- home-hero-preload:start -->[\s\S]*?    <!-- home-hero-preload:end -->/
+
 function renderPage(route) {
   const seo = getSeoForPath(route, data, siteUrl, baseUrl)
   const seoTags = renderSeoTags(seo, data)
-  return template.replace(
+  const pageTemplate = route === '/' ? template : template.replace(heroPreloadPattern, '')
+  return pageTemplate.replace(
     /    <!-- SEO:start -->[\s\S]*?    <!-- SEO:end -->/,
     `    <!-- SEO:start -->\n${seoTags}\n    <!-- SEO:end -->`,
   )
@@ -61,10 +64,12 @@ const notFoundSeo = {
 }
 fs.writeFileSync(
   path.join(distDir, '404.html'),
-  template.replace(
-    /    <!-- SEO:start -->[\s\S]*?    <!-- SEO:end -->/,
-    `    <!-- SEO:start -->\n${renderSeoTags(notFoundSeo, data)}\n    <!-- SEO:end -->`,
-  ),
+  template
+    .replace(heroPreloadPattern, '')
+    .replace(
+      /    <!-- SEO:start -->[\s\S]*?    <!-- SEO:end -->/,
+      `    <!-- SEO:start -->\n${renderSeoTags(notFoundSeo, data)}\n    <!-- SEO:end -->`,
+    ),
 )
 
 function xmlEscape(value) {

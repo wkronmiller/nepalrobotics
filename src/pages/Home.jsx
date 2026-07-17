@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import siteData from '../data/site-data.json'
 import ImageGallery from '../components/ImageGallery'
 import BlogCard from '../components/BlogCard'
-import { assetUrl } from '../utils/assets'
+import ResponsiveImage from '../components/ResponsiveImage'
 import './Home.css'
 
 // Everest summit photo from the original Squarespace gallery
@@ -21,10 +21,19 @@ export default function Home() {
 
   return (
     <div className="home">
-      <section
-        className="hero"
-        style={{ backgroundImage: `url(${assetUrl(HERO_IMAGE)})` }}
-      >
+      <section className="hero">
+        <ResponsiveImage
+          src={HERO_IMAGE}
+          alt=""
+          aria-hidden="true"
+          pictureClassName="hero-media"
+          widths={[640, 828, 1200, 1500]}
+          sizes="100vw"
+          fetchPriority="high"
+          decoding="async"
+          width="1500"
+          height="998"
+        />
         <div className="hero-overlay">
           <div className="container hero-content">
             <h1>{siteData.meta.title}</h1>

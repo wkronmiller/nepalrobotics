@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../utils/assets'
+import ResponsiveImage from './ResponsiveImage'
 import { getPostDate } from '../utils/seo'
 import './BlogCard.css'
 
@@ -41,7 +42,8 @@ function getExcerpt(post) {
 
 export default function BlogCard({ post }) {
   const title = post.title?.trim() || 'Project update'
-  const thumb = assetUrl(getThumbnail(post))
+  const thumbnail = getThumbnail(post)
+  const thumb = assetUrl(thumbnail)
   const excerpt = getExcerpt(post)
 
   return (
@@ -53,7 +55,12 @@ export default function BlogCard({ post }) {
           tabIndex={-1}
           aria-hidden="true"
         >
-          <img src={thumb} alt="" loading="lazy" />
+          <ResponsiveImage
+            src={thumbnail}
+            alt=""
+            loading="lazy"
+            sizes="(max-width: 600px) calc(100vw - 2.5rem), 337px"
+          />
         </Link>
       )}
       <div className="blog-card-body">
